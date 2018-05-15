@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+ 
+    <title>学生会主席竞选</title>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src=lib/jquery-3.3.1.min.js></script>
+    <script src=lib/nebPay.js></script>
+    <script src=lib/nebulas.js></script>
+    
+    <style >
+        .name {
+            text-align: center;
+            font-size: 66px;
+            /*text-shadow: 3px 5px grey, 1px 1px #333;*/
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="name">学生会主席竞选</div>
+    </br>
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="jumbotron">
+                <p>      
+            这是一个基于星云链的学生会主席竞选站点，每个人都可以竞选主席或给你认可的人投一票
+            </br>
+            而你只需要付出很少的gas，就能将这件事情公平公开公正的在星云链上实现。
+                </p>
+                
+                <p>
+                    <div class="noExtensionClass" style="display:none" id="noExtension">
+                    请安装 
+                    <a target="_blank" href="https://github.com/ChengOrangeJu/WebExtensionWallet">WebExtensionWallet</a> 
+                    激活 [学生会主席竞选] Dapp的功能 
+                    </div>  
+                </p>
+                
+               <!--  <div class="content_show" style="display: none" >
+                    <p>
+                         <button class="btn btn-primary btn-large" onclick="getInitInfo()" >Learn more</button>
+                    </p>
+                </div> -->
+
+            </div>
+
+    <div class="content_show" style="display: none;">
+        <div class="row clearfix">
+        <div class="col-md-12 column">
+            <ul class="nav nav-tabs">
+                <li>
+                     <a href="index.html">首页</a>
+                </li>
+                <li>
+                     <a href="voter.html">成为投票者</a>
+                </li>
+                <li class="active" >
+                     <a href="#">我要竞选</a>
+                </li>
+            </ul>
+            </br> </br>
+                    
+             <label for="exampleInputEmail1">姓名</label>
+             <input type="text" class="form-control" id="name" />
+            </br>
+             <label for="exampleInputEmail1">身份证</label>
+             <input type="text" class="form-control" id="identifier" />
+            </br>
+            <label for="exampleInputEmail1">格言</label>
+             <input type="text" class="form-control" id="motto" />
+            </br>
+            <button  class="btn btn-default" id="registerVoter" type="button">注册成为竞选者</button>
+        </div>
+    </div>
+    </br></br></br>
+    <div class="footer card-body text-center mt-3">
+      <a href="">
+        <img src="./img/logo.png" width="135" height="30">
+      </a>
+      <div>基于星云链上学生会主席竞选站点</div>
+    </div>
+</div>
+
+    <script type="text/javascript">
+        // getInitInfo();
+
+        if (typeof(webExtensionWallet) === "undefined") {
+            $(".noExtensionClass").show();
+        } else {
+            $(".content_show").show();
+
+
+        }
+
+    </script>
+
+    <script src=lib/jquery-3.3.1.min.js></script>
+    <script src=lib/nebPay.js></script> 
+    <script src=lib/nebulas.js></script>
+
+    <script>
+    "use strict";
+    // var dappAddress = "n1jG5bX2Bwykd428evErWzMirpt58WKTDaD";    //testnet
+    var dappAddress = "n1tAUG7e7fUbL7KoqaKp7oBCtqbedLAErk4";
+    var NebPay = require("nebpay");
+    var nebPay = new NebPay();    
+    var serialNumber; //交易序列号
+    var intervalQuery; //定时查询交易结果
+
+    $("#registerVoter").click(function(){
+        var to = dappAddress;
+        var value = "0";
+        var callFunction = "set"
+
+        var argsValue = "name:" + document.getElementById('name').value + "-.-.-zanFlag:false-.-.-zanIdentifier:null-.-.-campaignFlag:true-.-.-motto:"+ document.getElementById('motto').value +"-.-.-SupportNum:0";
+
+        var callArgs = "[\""+ document.getElementById('identifier').value +"\", \""+ argsValue +"\"]";  
+        console.log("callArgs = " + callArgs)
+
+        serialNumber = nebPay.call(to, value, callFunction, callArgs, {    //使用nebpay的call接口去调用合约,
+            listener: cbPush        //设置listener, 处理交易返回信息
+        });
+
+        intervalQuery = setInterval(function () {
+            funcIntervalQuery();
+        }, 5000);
+    });
+
+    function funcIntervalQuery() {
+       nebPay.queryPayInfo(serialNumber)   //search transaction result from server (result upload to server by app)
+            .then(function (resp) {
+                console.log("tx result: " + resp)   //resp is a JSON string
+                var respObject = JSON.parse(resp)
+                console.log("respObject = "+ respObject);
+                if(respObject.code === 0){
+                    //交易成功, 处理相关任务
+                    console.log("交易成功");
+                    alert("交易成功");
+                    clearInterval(intervalQuery)    //清除定时查询
+                }
+            })
+            .catch(function (err) {
+                console.log("err = " + err);
+            });
+    }
+
+    function cbPush(resp) {
+        var obj = JSON.parse(JSON.stringify(resp));
+        // console.log("response of push: " + JSON.stringify(resp))
+        console.log("txhash: " + obj.txhash);
+    }
+
+    </script>
+</body>
+
+</html>

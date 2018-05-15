@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+ 
+    <title>学生会主席竞选</title>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src=lib/jquery-3.3.1.min.js></script>
+    <script src=lib/nebPay.js></script>
+    <script src=lib/nebulas.js></script>
+
+    <style >
+        .name {
+            text-align: center;
+            font-size: 66px;
+            /*text-shadow: 3px 5px grey, 1px 1px #333;*/
+        }
+    </style>
+
+    
+</head>
+
+<body>
+
+<div class="container">
+    <div class="name">学生会主席竞选</div>
+    </br>
+ 
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="jumbotron">
+                <p>      
+            这是一个基于星云链的学生会主席竞选站点，每个人都可以竞选主席或给你认可的人投一票
+            </br>
+            而你只需要付出很少的gas，就能将这件事情公平公开公正的在星云链上实现。
+                </p>
+                
+                <p>
+                    <div class="noExtensionClass" style="display:none" id="noExtension">
+                    请安装 
+                    <a target="_blank" href="https://github.com/ChengOrangeJu/WebExtensionWallet">WebExtensionWallet</a> 
+                    激活 [学生会主席竞选] Dapp的功能 
+                    </div>  
+                </p>
+                
+               <!--  <div class="content_show" style="display: none" >
+                    <p>
+                         <button class="btn btn-primary btn-large" onclick="getInitInfo()" >Learn more</button>
+                    </p>
+                </div> -->
+
+            </div>
+
+    <div class="content_show" style="display: none;">
+        <div class="row clearfix">
+        <div class="col-md-12 column">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                     <a href="#">首页</a>
+                </li>
+                <li>
+                     <a href="voter.html">成为投票者</a>
+                </li>
+                <li>
+                     <a href="candidate.html">我要竞选</a>
+                </li>
+            </ul>
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <div class="row clearfix">
+                        <div class="col-md-6 column">
+
+
+                            <h3 id="first_name">
+                                 姓名
+                            </h3>
+                            <blockquote>
+                                <p id="first_motto"> 
+                                    格言：
+                                </p>
+                            </blockquote>
+                            <h4 id="first_supportNum">
+                                        支持人数：0
+                            </h4> 
+                            <!-- style="display: none;" -->
+                            <div id="first_identifier" style="display: none;">身份证号</div>
+                            <div id="first_index" style="display: none;">null</div>
+
+                            </br>
+                            <div class="row clearfix">
+                                <div class="col-md-8 column">
+                                     <input class="form-control"  type="text" name="" placeholder="身份证号" id="first_input">
+                                </div>
+                                <div class="col-md-4 column">
+                                     <button type="button" class="btn btn-danger btn-default" id="firstSupport">支持</button>
+                                </div>
+                            </div>
+                            </br>
+                        </div>
+
+                        <div class="col-md-6 column">
+
+                            <h3 id="second_name">
+                                 姓名
+                            </h3>
+                            <blockquote>
+                                <p id="second_motto"> 
+                                    格言：
+                                </p> 
+                            </blockquote>
+                            <h4 id="second_supportNum">
+                                        支持人数：0
+                            </h4> 
+                            <!-- style="display: none;" -->
+                            <div id="second_identifier" style="display: none;" >身份证号</div>
+                            <div id="second_index" style="display: none;" >null</div>
+
+                            </br>
+                            <div class="row clearfix">
+                                <div class="col-md-8 column">
+                                     <input class="form-control"  type="text" name="" placeholder="身份证号" id="second_input">
+                                </div>
+                                <div class="col-md-4 column">
+                                     <button type="button" class="btn btn-default active btn-danger" id="secondSupport">支持</button>
+                                </div>
+                            </div>
+                        </div>
+                        </br>
+                    </div>
+                            <ul class="pagination">
+                                <!-- <li>
+                                     <a href="#">上一页</a>
+                                </li> -->
+                                <li>
+                                     <a id="getNextInfo">下一页</a>
+                                     <!-- getNextInfo -->
+
+                                </li>
+                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </br></br></br>
+    <div class="footer card-body text-center mt-3">
+      <a href="">
+        <img src="./img/logo.png" width="135" height="30">
+      </a>
+      <div>基于星云链上学生会主席竞选站点</div>
+    </div>
+</div>
+
+    
+    <script type="text/javascript">
+        // getInitInfo();
+
+        if (typeof(webExtensionWallet) === "undefined") {
+            $(".noExtensionClass").show();
+        } else {
+            $(".content_show").show();
+
+
+        }
+        window.onload=function(){
+ 
+            getInitInfo();
+        }
+
+    </script>
+
+    <script>
+    "use strict";
+     // var dappAddress = "n1jG5bX2Bwykd428evErWzMirpt58WKTDaD";   //testnet
+    var dappAddress = "n1tAUG7e7fUbL7KoqaKp7oBCtqbedLAErk4";
+    var nebulas = require("nebulas"),
+        Account = nebulas.Account,
+        neb = new nebulas.Neb();
+        
+    neb.setRequest(new nebulas.HttpRequest("https://mainnet.nebulas.io"));
+    // neb.setRequest(new nebulas.HttpRequest("https://testnet.nebulas.io"));
+
+
+    function getInitInfo(){
+
+        var from = Account.NewAccount().getAddressString();
+        var value = "0";
+        var nonce = "0";
+        var gas_price = "1000000";
+        var gas_limit = "2000000";
+        // var callFunction = "forEach";
+        var callFunction = "forEachCandidate";
+        var limit = "10";
+        var offset = "0";
+        var callArgs = "[\"" + limit + "\",\"" + offset + "\"]";
+        var contract = {
+            "function": callFunction,
+            "args": callArgs,
+        }
+
+        neb.api.call(from,dappAddress,value,nonce,gas_price,gas_limit,contract).then(function(resp){
+            cbSearch(resp)
+        }).catch(function(err) {
+            // console.log("error:"+ err.message);
+        })
+
+    }
+
+    $("#getNextInfo").click(function() {
+        var from = Account.NewAccount().getAddressString();
+        var value = "0";
+        var nonce = "0";
+        var gas_price = "1000000";
+        var gas_limit = "2000000";
+        // var callFunction = "forEach";
+        var callFunction = "forEachCandidate";
+        var limit = "10";
+
+        var offset = document.getElementById('second_index').innerHTML;
+        if (offset == 'null') {
+            var first_index = document.getElementById('first_index').innerHTML;
+            if (first_index == 'null') {
+                offset = 0;
+            } else {
+                offset = parseInt(first_index) + 1 ;
+            }
+        } else {
+            offset = parseInt(offset) + 1;
+        }
+
+        var callArgs = "[\"" + limit + "\",\"" + offset + "\"]";
+        var contract = {
+            "function": callFunction,
+            "args": callArgs,
+        }
+
+        neb.api.call(from,dappAddress,value,nonce,gas_price,gas_limit,contract).then(function(resp){
+            cbSearch(resp)
+        }).catch(function(err) {
+            console.log("error:"+ err.message);
+        })
+    })
+
+    //return of search,
+    function cbSearch(resp) {
+        var result = resp.result;
+        console.log("return of rpc call:" + JSON.stringify(result));
+
+        if (result == 'null') {
+            $("#first_name").text("姓名");
+            $("#first_motto").text("格言：");
+            $("#first_supportNum").text("支持人数：");
+
+            $("#second_name").text("姓名");
+            $("#second_motto").text("格言：");
+            $("#second_supportNum").text("支持人数：");
+        } else {
+
+            result = JSON.parse(result);
+            // console.log(result);
+            var resultArray = eval(result);
+
+            //first
+            var firstObj = JSON.stringify(resultArray[0]);
+            var firstObjArray = JSON.parse(firstObj);
+            // console.log("firstObj = "+ firstObjArray.key);
+            // console.log("result = "+ eval('(' + result + ')'));
+            var firstValue = firstObjArray.value;
+            var firstArray = dealStr(firstValue);
+            $("#first_index").text(firstObjArray.index);
+            $("#first_identifier").text(firstObjArray.key);
+            $("#first_name").text(firstArray["name"]);
+            $("#first_motto").text("格言："+ firstArray["motto"]);
+            $("#first_supportNum").text("支持人数："+ firstArray["SupportNum"]);
+         
+            //second
+            var secondObj = JSON.stringify(resultArray[1]);
+            var secondObjArray = JSON.parse(secondObj);
+            var secondValue = secondObjArray.value;
+            var secondArray = dealStr(secondValue);
+            $("#second_index").text(secondObjArray.index);
+            $("#second_identifier").text(secondObjArray.key);
+            $("#second_name").text(secondArray["name"]);
+            $("#second_motto").text("格言："+ secondArray["motto"]);
+            $("#second_supportNum").text("支持人数："+ secondArray["SupportNum"]);
+        }
+    }
+
+    function dealStr(str) {
+        var targetArray = Array();
+        var array = str.split("-.-.-");
+        //姓名
+        var nameStr = array[0];
+        var name = nameStr.split(":")[1];
+        //支持状态
+        var zanFlagStr = array[1];
+        var zanFlag = zanFlagStr.split(":")[1];
+        //支持的人
+        var zanIdentifierStr = array[2];
+        var zanIdentifier = zanIdentifierStr.split(":")[1];
+        //是否参选
+        var campaignFlagStr = array[3];
+        var campaignFlag = campaignFlagStr.split(":")[1];
+        // //格言
+        var mottoStr = array[4];
+        var motto = mottoStr.split(":")[1];
+        //支持人数
+        var SupportNumStr = array[5];
+        var SupportNum = SupportNumStr.split(":")[1];
+
+        targetArray["name"] = name;
+        targetArray["zanFlag"] = zanFlag;
+        targetArray["zanIdentifier"] = zanIdentifier;
+        targetArray["campaignFlag"] = campaignFlag;
+        targetArray["motto"] = motto;
+        targetArray["SupportNum"] = SupportNum;
+        return targetArray;
+    }
+
+    var NebPay = require("nebpay");
+    var nebPay = new NebPay();    
+    var serialNumber; //交易序列号
+    var intervalQuery; //定时查询交易结果
+    $("#firstSupport").click(function() {
+         var to = dappAddress;
+        var value = "0";
+        var callFunction = "setZan"
+
+
+        var callArgs = "[\""+ document.getElementById('first_input').value +"\", \""+ document.getElementById('first_identifier').innerHTML +"\"]";  
+        console.log("callArgs = " + callArgs)
+        serialNumber = nebPay.call(to, value, callFunction, callArgs, {    //使用nebpay的call接口去调用合约,
+            // listener: cbPush        //设置listener, 处理交易返回信息
+        });
+
+        intervalQuery = setInterval(function () {
+            funcIntervalQuery();
+        }, 5000);
+    })
+
+    $("#secondSupport").click(function() {
+         var to = dappAddress;
+        var value = "0";
+        var callFunction = "setZan"
+
+
+        var callArgs = "[\""+ document.getElementById('second_input').value +"\", \""+ document.getElementById('second_identifier').innerHTML +"\"]";  
+        console.log("callArgs = " + callArgs)
+        serialNumber = nebPay.call(to, value, callFunction, callArgs, {    //使用nebpay的call接口去调用合约,
+            // listener: cbPush        //设置listener, 处理交易返回信息
+        });
+
+        intervalQuery = setInterval(function () {
+            funcIntervalQuery();
+        }, 5000);
+    })
+
+    function funcIntervalQuery() {
+       nebPay.queryPayInfo(serialNumber)   //search transaction result from server (result upload to server by app)
+            .then(function (resp) {
+                console.log("tx result: " + resp)   //resp is a JSON string
+                var respObject = JSON.parse(resp)
+                if(respObject.code === 0){
+                    //交易成功, 处理相关任务
+                    console.log("交易成功");
+                    alert("交易成功");
+                    clearInterval(intervalQuery)    //清除定时查询
+                }
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+    }
+
+    </script>
+    
+
+</body>
+
+</html>
